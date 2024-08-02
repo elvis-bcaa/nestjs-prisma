@@ -41,18 +41,16 @@ export class SchedulesController {
   }
 
   @Patch(':id')
-  @UsePipes(new ZodValidationPipe(updateScheduleSchema))
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updateScheduleDto: UpdateScheduleDto,
+    @Body(new ZodValidationPipe(updateScheduleSchema))
+    updateScheduleDto: UpdateScheduleDto,
   ) {
     return this.schedulesService.update(id, updateScheduleDto);
   }
 
   @Delete(':id')
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.schedulesService
-      .remove(id)
-      .catch((error) => console.log(error));
+    return this.schedulesService.remove(id);
   }
 }

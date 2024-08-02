@@ -8,21 +8,25 @@ export class SchedulesService {
   constructor(private prisma: PrismaService) {}
 
   create(createScheduleDto: CreateScheduleDto) {
-    // return 'This action adds a new schedule';
     return this.prisma.schedule.create({
       data: createScheduleDto,
     });
   }
 
   findAll() {
-    // return `This action returns all schedules`;
-    return this.prisma.schedule.findMany();
+    return this.prisma.schedule.findMany({
+      include: {
+        tasks: true,
+      },
+    });
   }
 
   findOne(id: string) {
-    // return `This action returns a #${id} schedule`;
     return this.prisma.schedule.findUnique({
       where: { id },
+      include: {
+        tasks: true,
+      },
     });
   }
 
@@ -30,6 +34,9 @@ export class SchedulesService {
     return this.prisma.schedule.update({
       where: { id },
       data: updateScheduleDto,
+      include: {
+        tasks: true,
+      },
     });
   }
 
