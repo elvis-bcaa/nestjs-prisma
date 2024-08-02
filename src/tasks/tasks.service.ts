@@ -1,26 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class TasksService {
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+  constructor(private prisma: PrismaService) {}
+
+  async create(createTaskDto: CreateTaskDto) {
+    return this.prisma.task.create({
+      data: createTaskDto,
+    });
   }
 
   findAll() {
-    return `This action returns all tasks`;
+    return this.prisma.task.findMany({
+      include: {
+        schedule: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  findOne(id: string) {
+    return this.prisma.task.findUnique({
+      where: { id },
+      include: {
+        schedule: true,
+      },
+    });
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  update(id: string, updateTaskDto: UpdateTaskDto) {
+    return this.prisma.task.update({
+      where: { id },
+      data: updateTaskDto,
+      include: {
+        schedule: true,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  remove(id: string) {
+    return this.prisma.task.delete({
+      where: { id },
+    });
   }
 }
